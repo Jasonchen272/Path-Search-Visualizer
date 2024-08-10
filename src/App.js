@@ -1,10 +1,8 @@
-
+import SearchVisualizer from "./VisualizerComponents/SearchVisualizer";
 
 function App() {
   return (
-    <div className="App">
-      
-    </div>
+    <SearchVisualizer></SearchVisualizer>
   );
 }
 
