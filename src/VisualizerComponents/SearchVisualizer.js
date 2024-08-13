@@ -17,7 +17,7 @@ function SearchVisualizer () {
     function initializeGrid() {
         const matrix = []
         while (start === end) {
-            end = [randomIntFromInterval(0, GRID_HEIGHT), randomIntFromInterval(0, GRID_WIDTH)];
+            end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
         }
         for (let i = 0; i < GRID_HEIGHT; i++) {
             const row = []
