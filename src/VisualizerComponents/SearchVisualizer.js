@@ -3,6 +3,7 @@ import Node from './Node.js'
 
 function SearchVisualizer () {
     const [grid, setGrid] = useState([])
+    const [searchType, setSearchType] = useState('astar')
 
     useEffect(() => {
         initializeGrid()
@@ -27,7 +28,18 @@ function SearchVisualizer () {
     }
 
     return (
-        <>
+        <>  
+            <label for="options">Search Algorithm:</label>
+            <select 
+                onChange={(e) => setSearchType(e.target.value)}
+                defaultValue="astar"
+            >
+                <option value="astar">A* Search</option>
+                <option value="dijkstra">Dijkstra</option>
+                <option value="bfs">BFS</option>
+                <option value="dfs">DFS</option>
+            </select>
+            <button>Search</button>
             {grid.map((row, idx) => (
                 <div style={{display: 'flex'}} key={idx}>
                     {row.map((col, colIdx) => (
