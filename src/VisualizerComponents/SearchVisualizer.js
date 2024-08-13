@@ -3,6 +3,8 @@ import Node from './Node.js'
 
 const GRID_HEIGHT = 20;
 const GRID_WIDTH = 30;
+let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
+let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 
 function SearchVisualizer () {
     const [grid, setGrid] = useState([])
@@ -14,8 +16,6 @@ function SearchVisualizer () {
 
     function initializeGrid() {
         const matrix = []
-        let start = [randomIntFromInterval(0, GRID_HEIGHT), randomIntFromInterval(0, GRID_WIDTH)];
-        let end = [randomIntFromInterval(0, GRID_HEIGHT), randomIntFromInterval(0, GRID_WIDTH)];
         while (start === end) {
             end = [randomIntFromInterval(0, GRID_HEIGHT), randomIntFromInterval(0, GRID_WIDTH)];
         }
