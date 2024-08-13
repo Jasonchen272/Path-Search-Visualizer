@@ -10,9 +10,9 @@ function SearchVisualizer () {
 
     function initializeGrid() {
         const matrix = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 20; i++) {
             const row = []
-            for (let j = 0; j < 10; j++) {
+            for (let j = 0; j < 30; j++) {
                 row.push({visited: false})
             }   
             matrix.push(row)
