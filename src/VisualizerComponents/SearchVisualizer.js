@@ -1,10 +1,14 @@
 import {React , useState, useEffect} from 'react'
 import Node from './Node.js'
+import { getBFSAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 20;
 const GRID_WIDTH = 30;
 let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
+// let start = [0, 0]
+
+// let end = [2, 2]
 
 function SearchVisualizer () {
     const [grid, setGrid] = useState([])
@@ -35,9 +39,21 @@ function SearchVisualizer () {
         setGrid(matrix)
     }
 
+    function BFSSearch() {
+        // console.log(getBFSAnimations(start, end, grid))
+        const animations = getBFSAnimations(start, end, grid) 
+        for (let i = 0; i < animations.length; i++) {
+            const graphRow = document.getElementsByClassName("graph-row")
+            const [x, y] = animations[i]
+            if (!(start[0] === x && start[1] === y) && !(end[0] === x && end[1] === y)) {
+                const node = graphRow[x].children[y]
+                node.style.backgroundColor = "blue"
+            }
+        }
+    }
     return (
         <>  
-            <label for="options">Search Algorithm:</label>
+            <label>Search Algorithm:</label>
             <select 
                 onChange={(e) => setSearchType(e.target.value)}
                 defaultValue="astar"
@@ -47,11 +63,19 @@ function SearchVisualizer () {
                 <option value="bfs">BFS</option>
                 <option value="dfs">DFS</option>
             </select>
-            <button>Search</button>
+            <button onClick={BFSSearch}>Search</button>
             {grid.map((row, idx) => (
-                <div style={{display: 'flex'}} key={idx}>
+                <div 
+                    className="graph-row"
+                    style={{display: 'flex'}} 
+                    key={idx}>
                     {row.map((col, colIdx) => (
-                        <Node key={colIdx} visited={col.visited} type={col.type}></Node>
+                        <Node 
+                            className="graph-node"
+                            key={colIdx} 
+                            visited={col.visited} 
+                            type={col.type}>    
+                        </Node>
                     ))}
                 </div>
             ))}
