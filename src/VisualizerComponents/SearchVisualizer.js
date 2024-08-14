@@ -6,6 +6,7 @@ const GRID_HEIGHT = 20;
 const GRID_WIDTH = 30;
 let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
+const ANIMATION_DELAY_MS = 5;
 // let start = [0, 0]
 
 // let end = [2, 2]
@@ -40,15 +41,16 @@ function SearchVisualizer () {
     }
 
     function BFSSearch() {
-        // console.log(getBFSAnimations(start, end, grid))
         const animations = getBFSAnimations(start, end, grid) 
         for (let i = 0; i < animations.length; i++) {
             const graphRow = document.getElementsByClassName("graph-row")
             const [x, y] = animations[i]
-            if (!(start[0] === x && start[1] === y) && !(end[0] === x && end[1] === y)) {
-                const node = graphRow[x].children[y]
-                node.style.backgroundColor = "blue"
-            }
+            setTimeout(() => {
+                if (!(start[0] === x && start[1] === y)) {
+                    const node = graphRow[x].children[y]
+                    node.style.backgroundColor = "blue"
+                }
+            }, i * ANIMATION_DELAY_MS)
         }
     }
 
