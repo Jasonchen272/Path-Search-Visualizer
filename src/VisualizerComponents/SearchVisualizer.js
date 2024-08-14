@@ -51,6 +51,14 @@ function SearchVisualizer () {
             }
         }
     }
+
+    function updateGrid(x, y) {
+        const updated = [...grid]
+        const updatedRow = [...updated[x]]
+        updatedRow[y].visited = !updatedRow[y].visited
+        updated[x] = updatedRow
+        setGrid(updated)
+    }
     return (
         <>  
             <label>Search Algorithm:</label>
@@ -74,7 +82,10 @@ function SearchVisualizer () {
                             className="graph-node"
                             key={colIdx} 
                             visited={col.visited} 
-                            type={col.type}>    
+                            type={col.type}
+                            x={idx}
+                            y={colIdx}
+                            updateGrid={updateGrid}>    
                         </Node>
                     ))}
                 </div>

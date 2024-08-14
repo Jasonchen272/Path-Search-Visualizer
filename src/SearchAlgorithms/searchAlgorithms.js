@@ -25,7 +25,7 @@ export function getBFSAnimations(start, end, graph) {
             }
         }
     }
-    return false;
+    return animations;
 }
 
 function testBounds(x, y, graph) {
