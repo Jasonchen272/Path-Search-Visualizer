@@ -6,7 +6,7 @@ const GRID_HEIGHT = 20;
 const GRID_WIDTH = 30;
 let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
-const ANIMATION_DELAY_MS = 5;
+const ANIMATION_DELAY_MS = 3;
 // let start = [0, 0]
 
 // let end = [2, 2]
@@ -28,11 +28,11 @@ function SearchVisualizer () {
             const row = []
             for (let j = 0; j < GRID_WIDTH; j++) {
                 if (i === start[0] && j === start[1]){
-                    row.push({visited: false, type:"start"})
+                    row.push({visited: false, type:"start", prev: null})
                 } else if(i === end[0] && j === end[1]) {
-                    row.push({visited: false, type:"end"})
+                    row.push({visited: false, type:"end",  prev: null})
                 } else {
-                    row.push({visited: false, type:"path"})
+                    row.push({visited: false, type:"path",  prev: null})
                 }
             }   
             matrix.push(row)
@@ -42,13 +42,17 @@ function SearchVisualizer () {
 
     function BFSSearch() {
         const animations = getBFSAnimations(start, end, grid) 
+        let found = false;
         for (let i = 0; i < animations.length; i++) {
             const graphRow = document.getElementsByClassName("graph-row")
-            const [x, y] = animations[i]
             setTimeout(() => {
-                if (!(start[0] === x && start[1] === y)) {
+                const [x, y] = animations[i]
+                if (x === -1) {
+                    found = true
+                }
+                else if(!(start[0] === x && start[1] === y)) {
                     const node = graphRow[x].children[y]
-                    node.style.backgroundColor = "blue"
+                    node.style.backgroundColor = found ? "yellow" : "blue"
                 }
             }, i * ANIMATION_DELAY_MS)
         }

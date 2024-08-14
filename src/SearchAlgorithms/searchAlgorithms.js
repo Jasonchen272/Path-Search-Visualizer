@@ -1,6 +1,6 @@
 export function getBFSAnimations(start, end, graph) {
     const animations = [];
-
+    const path = [start]
 
     if (graph.length === 0) {
         return animations
@@ -15,7 +15,9 @@ export function getBFSAnimations(start, end, graph) {
             const x = direction[0] + cur[0] 
             const y = direction[1] + cur[1]
             if (testBounds(x, y, graph) && !graph[x][y].visited) {
+                graph[x][y].prev = cur;
                 if (x === end[0] && y === end[1]) {
+                    addPath(start, end, animations, graph);
                     return animations;
                 }
                 animations.push([x, y])
@@ -25,6 +27,27 @@ export function getBFSAnimations(start, end, graph) {
         }
     }
     return animations;
+}
+
+function addPath(start, end, animations, graph) {
+    const path = graph[end[0]][end[1]].prev
+    let curX = path[0]
+    let curY = path[1]
+    let cur = graph[curX][curY].prev
+    animations.push([-1, -1])
+    const shortest = []
+
+
+    while (curX !== start[0] || curY !== start[1]) {
+        shortest.push([curX, curY])
+        curX = cur[0]
+        curY = cur[1]
+        cur = graph[curX][curY].prev
+    }
+
+    for (let i = shortest.length - 1; i >= 0; i--) {
+        animations.push(shortest[i])
+    }
 }
 
 function testBounds(x, y, graph) {
