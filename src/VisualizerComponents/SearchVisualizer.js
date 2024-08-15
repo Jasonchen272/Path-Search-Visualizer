@@ -58,6 +58,23 @@ function SearchVisualizer () {
         }
     }
 
+    function search() {
+        switch (searchType) {
+            case "astar":
+                console.log("astar")
+                break;
+            case "dijkstra":
+                console.log("dijkstra")
+                break;
+            case "bfs":
+                BFSSearch();
+                break;
+            case "dfs":
+                console.log("dfs")
+                break;
+        }
+    }
+
     function updateGrid(x, y) {
         const updated = [...grid]
         const updatedRow = [...updated[x]]
@@ -77,7 +94,7 @@ function SearchVisualizer () {
                 <option value="bfs">BFS</option>
                 <option value="dfs">DFS</option>
             </select>
-            <button onClick={BFSSearch}>Search</button>
+            <button onClick={search}>Search</button>
             {grid.map((row, idx) => (
                 <div 
                     className="graph-row"
