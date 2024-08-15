@@ -5,7 +5,7 @@ function Node({visited, type, x, y, updateGrid}) {
     const [hasVisited, setHasVisited] = useState(visited)
     function updateVisited() {
         setHasVisited(!hasVisited);
-        updateGrid(x, y)
+        updateGrid(x, y, hasVisited)
 
     }
 

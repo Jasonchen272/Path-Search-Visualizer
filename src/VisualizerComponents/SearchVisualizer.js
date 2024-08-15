@@ -1,6 +1,6 @@
 import {React , useState, useEffect} from 'react'
 import Node from './Node.js'
-import { getBFSAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
+import { getBFSAnimations, getAStarAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 20;
 const GRID_WIDTH = 30;
@@ -58,10 +58,29 @@ function SearchVisualizer () {
         }
     }
 
+    function AStarSearch() {
+        const animations = getAStarAnimations(start, end, grid);
+        let found = false;
+        for (let i = 0; i < animations.length; i++) {
+            const graphRow = document.getElementsByClassName("graph-row")
+            setTimeout(() => {
+                const [x, y] = animations[i]
+                if (x === -1) {
+                    found = true
+                }
+                else if(!(start[0] === x && start[1] === y)) {
+                    const node = graphRow[x].children[y]
+                    node.style.backgroundColor = found ? "yellow" : "blue"
+                }
+            }, i * ANIMATION_DELAY_MS)
+        }
+
+    }
+
     function search() {
         switch (searchType) {
             case "astar":
-                console.log("astar")
+                AStarSearch()
                 break;
             case "dijkstra":
                 console.log("dijkstra")
@@ -75,13 +94,39 @@ function SearchVisualizer () {
         }
     }
 
-    function updateGrid(x, y) {
+    function randomMaze() {
+        reset()
+        for (let i = 0; i < 200; i++) {
+            let x = randomIntFromInterval(0, GRID_HEIGHT - 1)
+            let y = randomIntFromInterval(0, GRID_WIDTH - 1)
+            while (grid[x][y].type !== 'path' || grid[x][y].visited) {
+                x = randomIntFromInterval(0, GRID_HEIGHT - 1)
+                y = randomIntFromInterval(0, GRID_WIDTH - 1)
+            }
+            updateGrid(x, y, true)
+        }
+    }
+
+    function reset() {
+        for (let i = 0; i < GRID_HEIGHT; i++) {
+            for (let j = 0; j < GRID_WIDTH; j ++){
+                if (!(i === start[0] && j === start[1]) && !(i === end[0] && j === end[1]))
+                updateGrid(i, j, false)
+            }
+        }
+    }
+
+    function updateGrid(x, y, visited) {
         const updated = [...grid]
         const updatedRow = [...updated[x]]
-        updatedRow[y].visited = !updatedRow[y].visited
+        updatedRow[y].visited = visited
         updated[x] = updatedRow
         setGrid(updated)
+        const node = document.getElementsByClassName('graph-row')[x].children[y]
+        node.style.backgroundColor = updatedRow[y].visited ? 'orange' : 'white'
     }
+
+
     return (
         <>  
             <label>Search Algorithm:</label>
@@ -95,6 +140,8 @@ function SearchVisualizer () {
                 <option value="dfs">DFS</option>
             </select>
             <button onClick={search}>Search</button>
+            <button onClick={reset}>Reset Grid</button>
+            <button onClick={randomMaze}>Randomize</button>
             {grid.map((row, idx) => (
                 <div 
                     className="graph-row"
