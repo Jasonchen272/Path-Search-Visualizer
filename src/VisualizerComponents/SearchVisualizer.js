@@ -2,10 +2,11 @@ import {React , useState, useEffect} from 'react'
 import Node from './Node.js'
 import { getBFSAnimations, getAStarAnimations, getDFSAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
-const GRID_HEIGHT = 20;
-const GRID_WIDTH = 30;
+const GRID_HEIGHT = 30;
+const GRID_WIDTH = 63;
 let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
+
 const ANIMATION_DELAY_MS = 3;
 // let start = [0, 0]
 
@@ -13,7 +14,8 @@ const ANIMATION_DELAY_MS = 3;
 
 function SearchVisualizer () {
     const [grid, setGrid] = useState([])
-    const [searchType, setSearchType] = useState('astar')
+    const [searchType, setSearchType] = useState('astar');
+    const [draggable, setDraggable] = useState(false);
 
     useEffect(() => {
         initializeGrid()
@@ -116,7 +118,7 @@ function SearchVisualizer () {
 
     function randomMaze() {
         reset()
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < GRID_HEIGHT * GRID_HEIGHT * 0.5; i++) {
             let x = randomIntFromInterval(0, GRID_HEIGHT - 1)
             let y = randomIntFromInterval(0, GRID_WIDTH - 1)
             while (grid[x][y].type !== 'path' || grid[x][y].visited) {
@@ -137,6 +139,9 @@ function SearchVisualizer () {
     }
 
     function updateGrid(x, y, visited) {
+        if ((x == start[0] && y == start[1]) || x == end[0] && y == end[1]) {
+            return;
+        }
         const updated = [...grid]
         const updatedRow = [...updated[x]]
         updatedRow[y].visited = visited
@@ -145,7 +150,6 @@ function SearchVisualizer () {
         const node = document.getElementsByClassName('graph-row')[x].children[y]
         node.style.backgroundColor = updatedRow[y].visited ? 'black' : 'white'
     }
-
 
     return (
         <>  
@@ -162,24 +166,36 @@ function SearchVisualizer () {
             <button onClick={search}>Search</button>
             <button onClick={reset}>Reset Grid</button>
             <button onClick={randomMaze}>Randomize</button>
-            {grid.map((row, idx) => (
-                <div 
-                    className="graph-row"
-                    style={{display: 'flex'}} 
-                    key={idx}>
-                    {row.map((col, colIdx) => (
-                        <Node 
-                            className="graph-node"
-                            key={colIdx} 
-                            visited={col.visited} 
-                            type={col.type}
-                            x={idx}
-                            y={colIdx}
-                            updateGrid={updateGrid}>    
-                        </Node>
-                    ))}
-                </div>
-            ))}
+            <div
+                onMouseDown={() => setDraggable(true)}
+                onMouseMove={(e) => {
+                    if (draggable) {
+                        let id = e.target.id.split(",");
+                        let x = id[0], y = id[1];
+                        updateGrid(x, y, true)
+                    }
+                }}
+                onMouseUp={() => setDraggable(false)}
+            >
+                {grid.map((row, idx) => (
+                    <div 
+                        className="graph-row"
+                        style={{display: 'flex'}} 
+                        key={idx}>
+                        {row.map((col, colIdx) => (
+                            <Node 
+                                className="graph-node"
+                                key={colIdx} 
+                                visited={col.visited} 
+                                type={col.type}
+                                x={idx}
+                                y={colIdx}
+                                updateGrid={updateGrid}>    
+                            </Node>
+                        ))}
+                    </div>
+                ))}
+            </div>
         </>
         
     )
