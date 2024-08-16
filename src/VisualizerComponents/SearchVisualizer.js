@@ -1,6 +1,6 @@
 import {React , useState, useEffect} from 'react'
 import Node from './Node.js'
-import { getBFSAnimations, getAStarAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
+import { getBFSAnimations, getAStarAnimations, getDFSAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 20;
 const GRID_WIDTH = 30;
@@ -48,11 +48,11 @@ function SearchVisualizer () {
             setTimeout(() => {
                 const [x, y] = animations[i]
                 if (x === -1) {
-                    found = true
+                    found = true;
                 }
                 else if(!(start[0] === x && start[1] === y)) {
                     const node = graphRow[x].children[y]
-                    node.style.backgroundColor = found ? "yellow" : "blue"
+                    node.style.backgroundColor = found ? "orange" : "blue"
                 }
             }, i * ANIMATION_DELAY_MS)
         }
@@ -66,15 +66,32 @@ function SearchVisualizer () {
             setTimeout(() => {
                 const [x, y] = animations[i]
                 if (x === -1) {
-                    found = true
+                    found = true;
                 }
                 else if(!(start[0] === x && start[1] === y)) {
                     const node = graphRow[x].children[y]
-                    node.style.backgroundColor = found ? "yellow" : "blue"
+                    node.style.backgroundColor = found ? "orange" : "blue"
                 }
             }, i * ANIMATION_DELAY_MS)
         }
+    }
 
+    function DFSSearch() {
+        const animations = getDFSAnimations(start, end, grid) 
+        let found = false;
+        for (let i = 0; i < animations.length; i++) {
+            const graphRow = document.getElementsByClassName("graph-row")
+            setTimeout(() => {
+                const [x, y] = animations[i]
+                if (x === -1) {
+                    found = true;
+                }
+                else if(!(start[0] === x && start[1] === y)) {
+                    const node = graphRow[x].children[y]
+                    node.style.backgroundColor = found ? "orange" : "blue"
+                }
+            }, i * ANIMATION_DELAY_MS)
+        }
     }
 
     function search() {
@@ -89,8 +106,11 @@ function SearchVisualizer () {
                 BFSSearch();
                 break;
             case "dfs":
-                console.log("dfs")
+                DFSSearch();
+                console.log("called");
                 break;
+            default:
+                AStarSearch();
         }
     }
 
@@ -123,7 +143,7 @@ function SearchVisualizer () {
         updated[x] = updatedRow
         setGrid(updated)
         const node = document.getElementsByClassName('graph-row')[x].children[y]
-        node.style.backgroundColor = updatedRow[y].visited ? 'orange' : 'white'
+        node.style.backgroundColor = updatedRow[y].visited ? 'black' : 'white'
     }
 
 

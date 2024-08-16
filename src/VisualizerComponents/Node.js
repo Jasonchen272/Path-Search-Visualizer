@@ -11,7 +11,7 @@ function Node({visited, type, x, y, updateGrid}) {
 
     return (
         <div className={type === 'start' ? 'start-node' : type === 'end' ? 'end-node' : 'path-node'} onMouseOver={() => {updateVisited(!hasVisited)}}
-            style={{ backgroundColor: type === 'start' ? 'green' : type === 'end' ? 'red' : hasVisited ? 'orange' : 'white' }}>
+            style={{ backgroundColor: type === 'start' ? 'green' : type === 'end' ? 'red' : hasVisited ? 'black' : 'white' }}>
         </div>
     )
 }
