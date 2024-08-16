@@ -42,77 +42,35 @@ function SearchVisualizer () {
         setGrid(matrix)
     }
 
-    function BFSSearch() {
-        const animations = getBFSAnimations(start, end, grid) 
-        let found = false;
-        for (let i = 0; i < animations.length; i++) {
-            const graphRow = document.getElementsByClassName("graph-row")
-            setTimeout(() => {
-                const [x, y] = animations[i]
-                if (x === -1) {
-                    found = true;
-                }
-                else if(!(start[0] === x && start[1] === y)) {
-                    const node = graphRow[x].children[y]
-                    node.style.backgroundColor = found ? "orange" : "blue"
-                }
-            }, i * ANIMATION_DELAY_MS)
-        }
-    }
-
-    function AStarSearch() {
-        const animations = getAStarAnimations(start, end, grid);
-        let found = false;
-        for (let i = 0; i < animations.length; i++) {
-            const graphRow = document.getElementsByClassName("graph-row")
-            setTimeout(() => {
-                const [x, y] = animations[i]
-                if (x === -1) {
-                    found = true;
-                }
-                else if(!(start[0] === x && start[1] === y)) {
-                    const node = graphRow[x].children[y]
-                    node.style.backgroundColor = found ? "orange" : "blue"
-                }
-            }, i * ANIMATION_DELAY_MS)
-        }
-    }
-
-    function DFSSearch() {
-        const animations = getDFSAnimations(start, end, grid) 
-        let found = false;
-        for (let i = 0; i < animations.length; i++) {
-            const graphRow = document.getElementsByClassName("graph-row")
-            setTimeout(() => {
-                const [x, y] = animations[i]
-                if (x === -1) {
-                    found = true;
-                }
-                else if(!(start[0] === x && start[1] === y)) {
-                    const node = graphRow[x].children[y]
-                    node.style.backgroundColor = found ? "orange" : "blue"
-                }
-            }, i * ANIMATION_DELAY_MS)
-        }
-    }
-
     function search() {
+        let animations;
         switch (searchType) {
             case "astar":
-                AStarSearch()
+                animations = getAStarAnimations(start, end, grid);
                 break;
             case "dijkstra":
-                console.log("dijkstra")
                 break;
             case "bfs":
-                BFSSearch();
+                animations = getBFSAnimations(start, end, grid) 
                 break;
             case "dfs":
-                DFSSearch();
-                console.log("called");
+                animations = getDFSAnimations(start, end, grid) 
                 break;
             default:
-                AStarSearch();
+                animations = getAStarAnimations(start, end, grid);
+        }
+        let found = false;
+        for (let i = 0; i < animations.length; i++) {
+            const graphRow = document.getElementsByClassName("graph-row")
+            setTimeout(() => {
+                const [x, y] = animations[i]
+                if (x === -1) {
+                    found = true;
+                } else if(!(start[0] === x && start[1] === y)) {
+                    const node = graphRow[x].children[y]
+                    node.style.backgroundColor = found ? "orange" : "blue"
+                }
+            }, i * ANIMATION_DELAY_MS)
         }
     }
 

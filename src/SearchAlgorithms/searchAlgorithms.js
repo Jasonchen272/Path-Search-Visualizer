@@ -158,26 +158,21 @@ export function getDFSAnimations(start, end, graph) {
         const x = cur[0];
         const y = cur[1];
 
-        if (graph[x][y].visited) {
-            continue;
-        } else {
-            graph[x][y].visited = true;
-            animations.push([x, y]);
-        }
-
-        if (x === end[0] && y === end[1]) {
-            addPath(start, end, animations, graph);
-            return animations
-        }
-
         for (let direction of directions) {
             const newX = direction[0] + x;
             const newY = direction[1] + y;
             if (testBounds(newX, newY, graph) && !graph[newX][newY].visited) {
                 graph[newX][newY].prev = [x, y];
                 stack.push([newX, newY]);
+                graph[x][y].visited = true;
+                animations.push([x, y]);
+            }
+            if (newX === end[0] && newY === end[1]) {
+                addPath(start, end, animations, graph);
+                return animations
             }
         }
+        
     }
     return animations;
 }
