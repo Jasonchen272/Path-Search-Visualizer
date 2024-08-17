@@ -99,7 +99,7 @@ function SearchVisualizer () {
     }
 
     function updateGrid(x, y, visited) {
-        if ((x == start[0] && y == start[1]) || (x == end[0] && y == end[1])) {
+        if ((x === start[0] && y === start[1]) || (x === end[0] && y === end[1])) {
             return;
         }
         const updated = [...grid]
@@ -108,7 +108,7 @@ function SearchVisualizer () {
         updated[x] = updatedRow
         setGrid(updated)
         const node = document.getElementsByClassName('graph-row')[x].children[y]
-        if (updatedRow[y].visited) node.style.backgroundColor = 'black'; 
+        node.style.backgroundColor = visited ? 'black' : 'white'
     }
 
     return (
@@ -131,6 +131,7 @@ function SearchVisualizer () {
                     <button onClick={search}>Search</button>
                     <button onClick={reset}>Reset Grid</button>
                     <button onClick={randomMaze}>Randomize</button>
+                    <button onClick={() => setErase(!erase)}>{erase ? "Erase  ✔" : "Erase X"}</button>
                 </div>
             </div>
             <div
