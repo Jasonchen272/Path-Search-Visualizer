@@ -76,7 +76,7 @@ function SearchVisualizer () {
 
     function randomMaze() {
         reset()
-        for (let i = 0; i < GRID_HEIGHT * GRID_HEIGHT * 0.5; i++) {
+        for (let i = 0; i < GRID_HEIGHT * GRID_HEIGHT * 0.6; i++) {
             let x = randomIntFromInterval(0, GRID_HEIGHT - 1)
             let y = randomIntFromInterval(0, GRID_WIDTH - 1)
             while (grid[x][y].type !== 'path' || grid[x][y].visited) {
@@ -97,7 +97,7 @@ function SearchVisualizer () {
     }
 
     function updateGrid(x, y, visited) {
-        if ((x == start[0] && y == start[1]) || x == end[0] && y == end[1]) {
+        if ((x === start[0] && y === start[1]) || (x === end[0] && y === end[1])) {
             return;
         }
         const updated = [...grid]
@@ -129,8 +129,8 @@ function SearchVisualizer () {
                 onMouseMove={(e) => {
                     if (draggable) {
                         let id = e.target.id.split(",");
-                        let x = id[0], y = id[1];
-                        updateGrid(x, y, true)
+                        let [x, y] = id;
+                        updateGrid(parseInt(x), parseInt(y), true)
                     }
                 }}
                 onMouseUp={() => setDraggable(false)}
