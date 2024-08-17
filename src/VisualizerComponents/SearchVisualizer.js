@@ -17,6 +17,7 @@ function SearchVisualizer () {
     const [grid, setGrid] = useState([])
     const [searchType, setSearchType] = useState('astar');
     const [draggable, setDraggable] = useState(false);
+    const [erase, setErase] = useState(false)
 
     useEffect(() => {
         initializeGrid()
@@ -44,7 +45,7 @@ function SearchVisualizer () {
     }
 
     function search() {
-        let animations;
+        let animations = [];
         switch (searchType) {
             case "astar":
                 animations = getAStarAnimations(start, end, grid);
@@ -138,7 +139,7 @@ function SearchVisualizer () {
                     if (draggable) {
                         let id = e.target.id.split(",");
                         let [x, y] = id;
-                        updateGrid(parseInt(x), parseInt(y), true)
+                        updateGrid(parseInt(x), parseInt(y), !erase)
                     }
                     console.log(e.currentTarget)
                 }}
