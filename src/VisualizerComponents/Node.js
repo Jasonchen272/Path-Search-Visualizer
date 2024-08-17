@@ -7,7 +7,7 @@ function Node({visited, type, x, y, updateGrid}) {
         <div 
             className={type === 'start' ? 'start-node' : type === 'end' ? 'end-node' : 'path-node'} 
             id= {`${x},${y}`}
-            style={{ backgroundColor: type === 'start' ? 'green' : type === 'end' ? 'red' : 'white' }}>
+            style={{ backgroundColor: type === 'start' ? 'green' : type === 'end' ? 'red' : '#F5EDED' }}>
         </div>
     )
 }

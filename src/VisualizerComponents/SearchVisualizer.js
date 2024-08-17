@@ -1,5 +1,6 @@
 import {React , useState, useEffect} from 'react'
 import Node from './Node.js'
+import './Node.css'
 import { getBFSAnimations, getAStarAnimations, getDFSAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 30;
@@ -68,7 +69,7 @@ function SearchVisualizer () {
                     found = true;
                 } else if(!(start[0] === x && start[1] === y)) {
                     const node = graphRow[x].children[y]
-                    node.style.backgroundColor = found ? "orange" : "blue"
+                    node.style.backgroundColor = found ? "#C3A17F" : "#7FA1C3"
                 }
             }, i * ANIMATION_DELAY_MS)
         }
@@ -97,7 +98,7 @@ function SearchVisualizer () {
     }
 
     function updateGrid(x, y, visited) {
-        if ((x == start[0] && y == start[1]) || x == end[0] && y == end[1]) {
+        if ((x == start[0] && y == start[1]) || (x == end[0] && y == end[1])) {
             return;
         }
         const updated = [...grid]
@@ -106,24 +107,31 @@ function SearchVisualizer () {
         updated[x] = updatedRow
         setGrid(updated)
         const node = document.getElementsByClassName('graph-row')[x].children[y]
-        node.style.backgroundColor = updatedRow[y].visited ? 'black' : 'white'
+        if (updatedRow[y].visited) node.style.backgroundColor = 'black'; 
     }
 
     return (
         <>  
-            <label>Search Algorithm:</label>
-            <select 
-                onChange={(e) => setSearchType(e.target.value)}
-                defaultValue="astar"
-            >
-                <option value="astar">A* Search</option>
-                <option value="dijkstra">Dijkstra</option>
-                <option value="bfs">BFS</option>
-                <option value="dfs">DFS</option>
-            </select>
-            <button onClick={search}>Search</button>
-            <button onClick={reset}>Reset Grid</button>
-            <button onClick={randomMaze}>Randomize</button>
+            <h1 className="header-title">Path Visualizer</h1>
+            <div className="sub-header">
+                <div className="algo-select">
+                    <label>Search Algorithm:</label>
+                    <select 
+                        onChange={(e) => setSearchType(e.target.value)}
+                        defaultValue="astar"
+                    >
+                        <option value="astar">A* Search</option>
+                        <option value="dijkstra">Dijkstra</option>
+                        <option value="bfs">BFS</option>
+                        <option value="dfs">DFS</option>
+                    </select>
+                </div>
+                <div className="btns">
+                    <button onClick={search}>Search</button>
+                    <button onClick={reset}>Reset Grid</button>
+                    <button onClick={randomMaze}>Randomize</button>
+                </div>
+            </div>
             <div
                 onMouseDown={() => setDraggable(true)}
                 onMouseMove={(e) => {
@@ -132,8 +140,10 @@ function SearchVisualizer () {
                         let x = id[0], y = id[1];
                         updateGrid(x, y, true)
                     }
+                    console.log(e.currentTarget)
                 }}
                 onMouseUp={() => setDraggable(false)}
+                onMouseLeave={() => setDraggable(false)}
             >
                 {grid.map((row, idx) => (
                     <div 

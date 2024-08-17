@@ -3,10 +3,42 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: auto;
+    width: auto;
     margin: 0;
-    background-color: white;
+    background-color: #F5EDED;
 }
+
+button {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding: 17px 40px;
+    border-radius: 50px;
+    cursor: pointer;
+    border: 0;
+    background-color: #7FA1C3;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 12px;
+    transition: all 0.5s ease;
+  }
+  
+  button:hover {
+    letter-spacing: 3px;
+    background-color: #F5EDED;
+    color: black;
+    border: #6482AD 2px solid;
+    box-shadow: #6482AD 0px 7px 29px 0px;
+  }
+  
+  button:active {
+    letter-spacing: 3px;
+    background-color: #6482AD;
+    color: hsl(0, 0%, 100%);
+    transform: translateY(5px);
+    transition: 100ms;
+  }
 
 .path-node {
     width: 25px;
@@ -42,3 +74,19 @@ body {
     justify-content: center;
     background-color: red;
 }
+
+.header-title {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: 0;
+    height: 10vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.sub-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
