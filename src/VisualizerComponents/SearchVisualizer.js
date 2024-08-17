@@ -16,6 +16,7 @@ function SearchVisualizer () {
     const [grid, setGrid] = useState([])
     const [searchType, setSearchType] = useState('astar');
     const [draggable, setDraggable] = useState(false);
+    const [erase, setErase] = useState(false)
 
     useEffect(() => {
         initializeGrid()
@@ -43,7 +44,7 @@ function SearchVisualizer () {
     }
 
     function search() {
-        let animations;
+        let animations = [];
         switch (searchType) {
             case "astar":
                 animations = getAStarAnimations(start, end, grid);
@@ -124,13 +125,14 @@ function SearchVisualizer () {
             <button onClick={search}>Search</button>
             <button onClick={reset}>Reset Grid</button>
             <button onClick={randomMaze}>Randomize</button>
+            <button onClick={() => setErase(!erase)}>{erase ? "Erase  ✔" : "Erase X"}</button>
             <div
                 onMouseDown={() => setDraggable(true)}
                 onMouseMove={(e) => {
                     if (draggable) {
                         let id = e.target.id.split(",");
                         let [x, y] = id;
-                        updateGrid(parseInt(x), parseInt(y), true)
+                        updateGrid(parseInt(x), parseInt(y), !erase)
                     }
                 }}
                 onMouseUp={() => setDraggable(false)}
