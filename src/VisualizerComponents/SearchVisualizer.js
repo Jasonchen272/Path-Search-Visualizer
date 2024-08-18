@@ -1,7 +1,7 @@
 import {React , useState, useEffect} from 'react'
 import Node from './Node.js'
 import './Node.css'
-import { getBFSAnimations, getAStarAnimations, getDFSAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
+import { getBFSAnimations, getAStarAnimations, getDFSAnimations, getDijkstraAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 30;
 const GRID_WIDTH = 63;
@@ -51,6 +51,7 @@ function SearchVisualizer () {
                 animations = getAStarAnimations(start, end, grid);
                 break;
             case "dijkstra":
+                animations = getDijkstraAnimations(start, end, grid);
                 break;
             case "bfs":
                 animations = getBFSAnimations(start, end, grid) 
@@ -142,7 +143,6 @@ function SearchVisualizer () {
                         let [x, y] = id;
                         updateGrid(parseInt(x), parseInt(y), !erase)
                     }
-                    console.log(e.currentTarget)
                 }}
                 onMouseUp={() => setDraggable(false)}
                 onMouseLeave={() => setDraggable(false)}

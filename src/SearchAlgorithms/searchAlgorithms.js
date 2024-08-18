@@ -176,3 +176,129 @@ export function getDFSAnimations(start, end, graph) {
     }
     return animations;
 }
+
+// =============== Dijkstra ================
+
+class MinHeap {
+    constructor() {
+        this.heap = [];
+        this.positions = new Map();
+    }
+
+    insert(node, priority) {
+        this.heap.push({ node, priority });
+        this.positions.set(node, this.heap.length - 1);
+        this.bubbleUp(this.heap.length - 1);
+    }
+
+    extractMin() {
+        const min = this.heap[0];
+        const end = this.heap.pop();
+        if (this.heap.length > 0) {
+            this.heap[0] = end;
+            this.positions.set(end.node, 0);
+            this.bubbleDown(0);
+        }
+        this.positions.delete(min.node);
+        return min;
+    }
+
+    isEmpty() {
+        return this.heap.length === 0;
+    }
+
+    bubbleUp(index) {
+        const element = this.heap[index];
+        while (index > 0) {
+            const parentIndex = Math.floor((index - 1) / 2);
+            const parent = this.heap[parentIndex];
+            if (element.priority >= parent.priority) break;
+            this.heap[index] = parent;
+            this.positions.set(parent.node, index);
+            index = parentIndex;
+        }
+        this.heap[index] = element;
+        this.positions.set(element.node, index);
+    }
+
+    bubbleDown(index) {
+        const length = this.heap.length;
+        const element = this.heap[index];
+        while (true) {
+            const leftChildIndex = 2 * index + 1;
+            const rightChildIndex = 2 * index + 2;
+            let swap = null;
+
+            if (leftChildIndex < length) {
+                const leftChild = this.heap[leftChildIndex];
+                if (leftChild.priority < element.priority) {
+                    swap = leftChildIndex;
+                }
+            }
+
+            if (rightChildIndex < length) {
+                const rightChild = this.heap[rightChildIndex];
+                if (
+                    (swap === null && rightChild.priority < element.priority) ||
+                    (swap !== null && rightChild.priority < this.heap[swap].priority)
+                ) {
+                    swap = rightChildIndex;
+                }
+            }
+
+            if (swap === null) break;
+            this.heap[index] = this.heap[swap];
+            this.positions.set(this.heap[index].node, index);
+            index = swap;
+        }
+        this.heap[index] = element;
+        this.positions.set(element.node, index);
+    }
+}
+
+
+export function getDijkstraAnimations(start, end, graph) {
+    const animations = []
+    const distances = {};
+    const priorityQueue = new MinHeap();
+    const directions = [[1, 0], [0, 1], [-1, 0], [0, -1]];
+
+    for (let i = 0; i < graph.length; i++) {
+        for (const node in graph[i]) {
+            distances[`${i},${node}`] = Infinity;
+        }
+    }
+    distances[start] = 0;
+
+    priorityQueue.insert(start, 0);
+
+    while (!priorityQueue.isEmpty()) {
+        const { node: currentNode, priority: currentDistance } = priorityQueue.extractMin();
+
+        // If the current distance is greater than the recorded distance, skip processing
+        if (currentDistance > distances[currentNode[0] + "," + currentNode[1]]) {
+            continue;
+        }
+        // Update distances for each neighbor
+        for (const direction of directions) {
+            const newX = direction[0] + currentNode[0];
+            const newY = direction[1] + currentNode[1];
+            const distance = currentDistance + 1; // All edges have the same weight (1)
+            if (newX === end[0] && newY === end[1]) {
+                graph[newX][newY].prev = [currentNode[0], currentNode[1]];
+                addPath(start, end, animations, graph);
+                return animations
+            }
+
+            // If a shorter path is found
+            if (distance < distances[newX + "," + newY] && testBounds(newX, newY, graph) && !graph[newX][newY].visited) {
+                graph[newX][newY].prev = [currentNode[0], currentNode[1]];
+                graph[currentNode[0]][currentNode[1]].visited = true;
+                animations.push([newX, newY]);
+                distances[newX + "," + newY] = distance;
+                priorityQueue.insert([newX, newY], distance);
+            }
+        }
+    }
+    return animations;
+}
