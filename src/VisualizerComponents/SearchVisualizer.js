@@ -108,7 +108,7 @@ function SearchVisualizer () {
         updated[x] = updatedRow
         setGrid(updated)
         const node = document.getElementsByClassName('graph-row')[x].children[y]
-        node.style.backgroundColor = visited ? 'black' : 'white'
+        node.style.backgroundColor = visited ? 'black' : '#F5EDED'
     }
 
     return (
