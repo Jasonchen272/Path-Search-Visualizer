@@ -118,7 +118,7 @@ function SearchVisualizer () {
     }
 
     useEffect(() => {
-        const handleKeyUp = (event) => {
+        const handleKeyDown = (event) => {
             let [x, y] = player;
             let [newX, newY] = player;
             event.preventDefault();
@@ -153,11 +153,11 @@ function SearchVisualizer () {
         };
 
 
-        document.addEventListener('keyup', handleKeyUp);
+        document.addEventListener('keydown', handleKeyDown);
 
         // Cleanup function to remove the event listener on component unmount
         return () => {
-            document.removeEventListener('keyup', handleKeyUp);
+            document.removeEventListener('keydown', handleKeyDown);
         };
     }, [player]);  // Dependency array includes 'player'
 
