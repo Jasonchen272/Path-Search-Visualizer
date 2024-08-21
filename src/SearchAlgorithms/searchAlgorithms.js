@@ -14,7 +14,7 @@ export function getBFSAnimations(start, end, graph) {
         for (let direction of directions) {
             const x = direction[0] + cur[0] 
             const y = direction[1] + cur[1]
-            if (testBounds(x, y, graph) && !graph[x][y].visited) {
+            if (testBounds(x, y, graph) && !graph[x][y].visited && graph[x][y].type !== 'wall') {
                 graph[x][y].prev = cur;
                 if (x === end[0] && y === end[1]) {
                     addPath(start, end, animations, graph);
@@ -118,7 +118,7 @@ export function getAStarAnimations(start, end, graph) {
 
 
             // Check if the neighbor is within bounds and visited
-            if (testBounds(neighbor[0], neighbor[1], graph)  && !graph[neighbor[0]][neighbor[1]].visited) {
+            if (testBounds(neighbor[0], neighbor[1], graph)  && !graph[neighbor[0]][neighbor[1]].visited && graph[neighbor[0]][neighbor[1]].type !== 'wall') {
                 // cost if this path chosen
                 const newCost = cost[`${current[0]},${current[1]}`] + 1;
 
@@ -161,7 +161,7 @@ export function getDFSAnimations(start, end, graph) {
         for (let direction of directions) {
             const newX = direction[0] + x;
             const newY = direction[1] + y;
-            if (testBounds(newX, newY, graph) && !graph[newX][newY].visited) {
+            if (testBounds(newX, newY, graph) && !graph[newX][newY].visited && graph[newX][newY].type !== 'wall')  {
                 graph[newX][newY].prev = [x, y];
                 stack.push([newX, newY]);
                 graph[x][y].visited = true;
@@ -291,7 +291,7 @@ export function getDijkstraAnimations(start, end, graph) {
             }
 
             // If a shorter path is found
-            if (distance < distances[newX + "," + newY] && testBounds(newX, newY, graph) && !graph[newX][newY].visited) {
+            if (distance < distances[newX + "," + newY] && testBounds(newX, newY, graph) && !graph[newX][newY].visited && graph[newX][newY].type !== 'wall') {
                 graph[newX][newY].prev = [currentNode[0], currentNode[1]];
                 graph[currentNode[0]][currentNode[1]].visited = true;
                 animations.push([newX, newY]);

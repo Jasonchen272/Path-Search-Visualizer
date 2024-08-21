@@ -83,32 +83,36 @@ function SearchVisualizer () {
         for (let i = 0; i < GRID_HEIGHT * GRID_HEIGHT * 0.6; i++) {
             let x = randomIntFromInterval(0, GRID_HEIGHT - 1)
             let y = randomIntFromInterval(0, GRID_WIDTH - 1)
-            while (grid[x][y].type !== 'path' || grid[x][y].visited) {
+            while (grid[x][y].type !== 'path') {
                 x = randomIntFromInterval(0, GRID_HEIGHT - 1)
                 y = randomIntFromInterval(0, GRID_WIDTH - 1)
             }
-            updateGrid(x, y, true)
+            updateGrid(x, y, true, 'wall')
         }
     }
 
     function reset() {
         for (let i = 0; i < GRID_HEIGHT; i++) {
             for (let j = 0; j < GRID_WIDTH; j ++){
-                if (!(i === start[0] && j === start[1]) && !(i === end[0] && j === end[1]))
-                updateGrid(i, j, false)
+                updateGrid(i, j, false, 'path')
             }
         }
     }
 
-    function updateGrid(x, y, visited) {
+    function updateGrid(x, y, visited, type) {
         if ((x === start[0] && y === start[1]) || (x === end[0] && y === end[1])) {
             return;
         }
-        const updated = [...grid]
-        const updatedRow = [...updated[x]]
-        updatedRow[y].visited = visited
-        updated[x] = updatedRow
-        setGrid(updated)
+        setGrid(prevGrid => {
+            const updatedGrid = [...prevGrid];
+            updatedGrid[x][y] = {
+                ...updatedGrid[x][y],
+                visited, 
+                type
+
+            };
+            return updatedGrid;
+        });
         const node = document.getElementsByClassName('graph-row')[x].children[y]
         node.style.backgroundColor = visited ? 'black' : '#F5EDED'
     }
@@ -118,48 +122,58 @@ function SearchVisualizer () {
     }
 
     useEffect(() => {
-        const handleKeyUp = (event) => {
+        const handleKeyDown = (event) => {
             let [x, y] = player;
             let [newX, newY] = player;
+            let moved = false;
             event.preventDefault();
             switch(event.key) {
                 case "w":
-                    if (testBounds(x - 1, y)) {
+                    if (testBounds(x - 1, y) && grid[x - 1][y].type !== 'wall') {
+                        moved = true;
                         newX = x - 1
                     }
                     break;
                 case "a":
-                    if (testBounds(x, y - 1)) {
+                    if (testBounds(x, y - 1) && grid[x][y - 1].type !== 'wall') {
+                        moved = true;
                         newY = y - 1
                     }
                     break;
                 case "s":
-                    if (testBounds(x + 1, y)) {
+                    if (testBounds(x + 1, y) && grid[x + 1][y].type !== 'wall') {
+                        moved = true;
                         newX = x + 1
                     }
                     break;
                 case "d":
-                    if (testBounds(x, y + 1)) {
+                    if (testBounds(x, y + 1) && grid[x][y + 1].type !== 'wall') {
+                        moved = true;
                         newY = y + 1
                     }
                     break;
                 default:
 
             }
-            setPlayer([newX, newY])
-            document.getElementsByClassName('graph-row')[newX].children[newY].style.border = "blue solid";
-            document.getElementsByClassName('graph-row')[x].children[y].style.border = "solid";
+            if (moved) {
+                if (newX === end[0] && newY === end[1]) {
+                    alert("finished maze")
+                }
+                setPlayer([newX, newY])
+                document.getElementsByClassName('graph-row')[newX].children[newY].style.border = "blue solid";
+                document.getElementsByClassName('graph-row')[x].children[y].style.border = "solid";
+            }
 
         };
 
 
-        document.addEventListener('keyup', handleKeyUp);
+        document.addEventListener('keydown', handleKeyDown);
 
         // Cleanup function to remove the event listener on component unmount
         return () => {
-            document.removeEventListener('keyup', handleKeyUp);
+            document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [player]);  // Dependency array includes 'player'
+    }, [player, grid]);  // Dependency array includes 'player'
 
     return (
         <>  
@@ -191,7 +205,7 @@ function SearchVisualizer () {
                     if (draggable) {
                         let id = e.target.id.split(",");
                         let [x, y] = id;
-                        updateGrid(parseInt(x), parseInt(y), !erase)
+                        updateGrid(parseInt(x), parseInt(y), !erase, 'path')
                     }
                 }}
                 onMouseUp={() => setDraggable(false)}
@@ -209,8 +223,7 @@ function SearchVisualizer () {
                                 visited={col.visited} 
                                 type={col.type}
                                 x={idx}
-                                y={colIdx}
-                                updateGrid={updateGrid}>    
+                                y={colIdx}>    
                             </Node>
                         ))}
                     </div>
