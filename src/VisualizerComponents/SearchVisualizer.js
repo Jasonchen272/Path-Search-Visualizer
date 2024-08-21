@@ -18,6 +18,7 @@ function SearchVisualizer () {
     const [searchType, setSearchType] = useState('astar');
     const [draggable, setDraggable] = useState(false);
     const [erase, setErase] = useState(false)
+    const [player, setPlayer] = useState(start)
 
     useEffect(() => {
         initializeGrid()
@@ -108,15 +109,64 @@ function SearchVisualizer () {
         updated[x] = updatedRow
         setGrid(updated)
         const node = document.getElementsByClassName('graph-row')[x].children[y]
-        node.style.backgroundColor = visited ? 'black' : 'white'
+        node.style.backgroundColor = visited ? 'black' : '#F5EDED'
     }
+
+    function testBounds(x, y) {
+        return x < GRID_HEIGHT && x >= 0 && y < GRID_WIDTH && y >= 0
+    }
+
+    useEffect(() => {
+        const handleKeyUp = (event) => {
+            let [x, y] = player;
+            let [newX, newY] = player;
+            event.preventDefault();
+            switch(event.key) {
+                case "w":
+                    if (testBounds(x - 1, y)) {
+                        newX = x - 1
+                    }
+                    break;
+                case "a":
+                    if (testBounds(x, y - 1)) {
+                        newY = y - 1
+                    }
+                    break;
+                case "s":
+                    if (testBounds(x + 1, y)) {
+                        newX = x + 1
+                    }
+                    break;
+                case "d":
+                    if (testBounds(x, y + 1)) {
+                        newY = y + 1
+                    }
+                    break;
+                default:
+
+            }
+            setPlayer([newX, newY])
+            document.getElementsByClassName('graph-row')[newX].children[newY].style.border = "blue solid";
+            document.getElementsByClassName('graph-row')[x].children[y].style.border = "solid";
+
+        };
+
+
+        document.addEventListener('keyup', handleKeyUp);
+
+        // Cleanup function to remove the event listener on component unmount
+        return () => {
+            document.removeEventListener('keyup', handleKeyUp);
+        };
+    }, [player]);  // Dependency array includes 'player'
 
     return (
         <>  
             <h1 className="header-title">Path Visualizer</h1>
             <div className="sub-header">
-                <div className="algo-select">
-                    <label>Search Algorithm:</label>
+                <label>Search Algorithm:</label>
+
+                <div className="algo-select" style={{width: "200px"}}>
                     <select 
                         onChange={(e) => setSearchType(e.target.value)}
                         defaultValue="astar"
@@ -142,7 +192,6 @@ function SearchVisualizer () {
                         let [x, y] = id;
                         updateGrid(parseInt(x), parseInt(y), !erase)
                     }
-                    console.log(e.currentTarget)
                 }}
                 onMouseUp={() => setDraggable(false)}
                 onMouseLeave={() => setDraggable(false)}
