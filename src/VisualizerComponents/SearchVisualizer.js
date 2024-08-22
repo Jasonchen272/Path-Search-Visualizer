@@ -4,7 +4,7 @@ import './Node.css'
 import { getBFSAnimations, getAStarAnimations, getDFSAnimations, getDijkstraAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 30;
-const GRID_WIDTH = 63;
+const GRID_WIDTH = 61;
 let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 
@@ -19,6 +19,7 @@ function SearchVisualizer () {
     const [draggable, setDraggable] = useState(false);
     const [erase, setErase] = useState(false)
     const [player, setPlayer] = useState(start)
+    const [steps, setSteps] = useState(0)
 
     useEffect(() => {
         initializeGrid()
@@ -92,6 +93,10 @@ function SearchVisualizer () {
     }
 
     function reset() {
+        setSteps(0)
+        document.getElementsByClassName('graph-row')[player[0]].children[player[1]].style.backgroundColor = "#F5EDED";
+        document.getElementsByClassName('graph-row')[start[0]].children[start[1]].style.backgroundColor = "blue";
+        setPlayer(start)
         for (let i = 0; i < GRID_HEIGHT; i++) {
             for (let j = 0; j < GRID_WIDTH; j ++){
                 updateGrid(i, j, false, 'path')
@@ -156,12 +161,14 @@ function SearchVisualizer () {
 
             }
             if (moved) {
-                if (newX === end[0] && newY === end[1]) {
-                    alert("finished maze")
-                }
+                setSteps(steps + 1)
                 setPlayer([newX, newY])
-                document.getElementsByClassName('graph-row')[newX].children[newY].style.border = "blue solid";
-                document.getElementsByClassName('graph-row')[x].children[y].style.border = "solid";
+                document.getElementsByClassName('graph-row')[newX].children[newY].style.backgroundColor = "blue";
+                document.getElementsByClassName('graph-row')[x].children[y].style.backgroundColor = "#F5EDED";
+                if (newX === end[0] && newY === end[1]) {
+                    const message = "finished maze in " + steps + " steps"
+                    alert(message)
+                }
             }
 
         };
@@ -173,7 +180,7 @@ function SearchVisualizer () {
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [player, grid]);  // Dependency array includes 'player'
+    }, [player, grid, steps]);  // Dependency array includes 'player'
 
     return (
         <>  
@@ -198,6 +205,7 @@ function SearchVisualizer () {
                     <button onClick={randomMaze}>Randomize</button>
                     <button onClick={() => setErase(!erase)}>{erase ? "Erase  ✔" : "Erase X"}</button>
                 </div>
+                {steps}
             </div>
             <div
                 onMouseDown={() => setDraggable(true)}
