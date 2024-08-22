@@ -18,8 +18,6 @@ function SearchVisualizer () {
     const [searchType, setSearchType] = useState('astar');
     const [draggable, setDraggable] = useState(false);
     const [erase, setErase] = useState(false)
-    const [player, setPlayer] = useState(start)
-    const [steps, setSteps] = useState(0)
 
     useEffect(() => {
         initializeGrid()
@@ -93,10 +91,6 @@ function SearchVisualizer () {
     }
 
     function reset() {
-        setSteps(0)
-        document.getElementsByClassName('graph-row')[player[0]].children[player[1]].style.backgroundColor = "#F5EDED";
-        document.getElementsByClassName('graph-row')[start[0]].children[start[1]].style.backgroundColor = "blue";
-        setPlayer(start)
         for (let i = 0; i < GRID_HEIGHT; i++) {
             for (let j = 0; j < GRID_WIDTH; j ++){
                 updateGrid(i, j, false, 'path')
@@ -126,61 +120,7 @@ function SearchVisualizer () {
         return x < GRID_HEIGHT && x >= 0 && y < GRID_WIDTH && y >= 0
     }
 
-    useEffect(() => {
-        const handleKeyDown = (event) => {
-            let [x, y] = player;
-            let [newX, newY] = player;
-            let moved = false;
-            event.preventDefault();
-            switch(event.key) {
-                case "w":
-                    if (testBounds(x - 1, y) && grid[x - 1][y].type !== 'wall') {
-                        moved = true;
-                        newX = x - 1
-                    }
-                    break;
-                case "a":
-                    if (testBounds(x, y - 1) && grid[x][y - 1].type !== 'wall') {
-                        moved = true;
-                        newY = y - 1
-                    }
-                    break;
-                case "s":
-                    if (testBounds(x + 1, y) && grid[x + 1][y].type !== 'wall') {
-                        moved = true;
-                        newX = x + 1
-                    }
-                    break;
-                case "d":
-                    if (testBounds(x, y + 1) && grid[x][y + 1].type !== 'wall') {
-                        moved = true;
-                        newY = y + 1
-                    }
-                    break;
-                default:
 
-            }
-            if (moved) {
-                setSteps(steps + 1)
-                setPlayer([newX, newY])
-                document.getElementsByClassName('graph-row')[newX].children[newY].style.backgroundColor = "blue";
-                document.getElementsByClassName('graph-row')[x].children[y].style.backgroundColor = "#F5EDED";
-                if (newX === end[0] && newY === end[1]) {
-                    const message = "finished maze in " + steps + " steps"
-                    alert(message)
-                }
-            }
-
-        };
-
-
-        document.addEventListener('keydown', handleKeyDown);
-
-        // Cleanup function to remove the event listener on component unmount
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [player, grid, steps]);  // Dependency array includes 'player'
 
     return (
         <>  
@@ -205,7 +145,6 @@ function SearchVisualizer () {
                     <button onClick={randomMaze}>Randomize</button>
                     <button onClick={() => setErase(!erase)}>{erase ? "Erase  ✔" : "Erase X"}</button>
                 </div>
-                {steps}
             </div>
             <div
                 onMouseDown={() => setDraggable(true)}
