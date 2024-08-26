@@ -4,7 +4,7 @@ import './Node.css'
 import { getBFSAnimations, getAStarAnimations, getDFSAnimations, getDijkstraAnimations } from '../SearchAlgorithms/searchAlgorithms.js';
 
 const GRID_HEIGHT = 30;
-const GRID_WIDTH = 61;
+const GRID_WIDTH = 63;
 let start = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 let end = [randomIntFromInterval(0, GRID_HEIGHT - 1), randomIntFromInterval(0, GRID_WIDTH - 1)];
 

@@ -7,7 +7,8 @@ function Node({type, x, y}) {
     return (
         <div 
             className={type === 'start' ? 'start-node' : type === 'end' ? 'end-node' : 'path-node'} 
-            id= {`${x},${y}`}>
+            id= {`${x},${y}`}
+            style={{border: type === 'start' ? "blue solid" : 'solid'}}>
         </div>
     )
 }
